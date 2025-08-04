@@ -1,0 +1,35 @@
+import re
+
+def extract_signal_info(text):
+    info = {
+        "type": None,
+        "strike": None,
+        "price": None,
+        "risk_level": None
+    }
+
+    # نوع العقد
+    if "كول" in text or "CALL" in text.upper():
+        info["type"] = "CALL"
+    elif "بوت" in text or "PUT" in text.upper():
+        info["type"] = "PUT"
+
+    # السترايك
+    strike_match = re.search(r"ستر?اي?ك\s*:?[\s\-]*([0-9]+)", text)
+    if strike_match:
+        info["strike"] = strike_match.group(1)
+
+    # السعر
+    price_match = re.search(r"بسعر\s*:?[\s\-]*([0-9.]+)", text)
+    if price_match:
+        info["price"] = price_match.group(1)
+
+    # مستوى الخطورة
+    if "عالية" in text:
+        info["risk_level"] = "عالية"
+    elif "متوسطة" in text:
+        info["risk_level"] = "متوسطة"
+    elif "عادي" in text or "منخفضة" in text:
+        info["risk_level"] = "عادية"
+
+    return info

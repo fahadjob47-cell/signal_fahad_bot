@@ -1,0 +1,22 @@
+import telebot
+from utils import extract_signal_info
+
+# التوكن الجديد للبوت
+TOKEN = "7588547164:AAFQrn_kEONb5oG2uNOOf0Cum31Am-rMlEY"
+bot = telebot.TeleBot(TOKEN)
+
+@bot.message_handler(func=lambda message: True)
+def handle_message(message):
+    text = message.text
+    info = extract_signal_info(text)
+
+    reply = "📮 تحليل التوصية:\n"
+    reply += f"📍 النوع: {info['type'] or '❓'}\n"
+    reply += f"🎯 السترايك: {info['strike'] or '❓'}\n"
+    reply += f"💰 السعر: {info['price'] or '❓'}\n"
+    reply += f"⚠️ مستوى الخطورة: {info['risk_level'] or '❓'}"
+
+    bot.reply_to(message, reply)
+
+print("✅ البوت يعمل الآن ...")
+bot.polling()
